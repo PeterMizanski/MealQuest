@@ -12,7 +12,6 @@ public class HomePageServlet extends HttpServlet {
 	
 	public void init() {
 		try {
-			// load jdbc driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {e.printStackTrace();}
 	}
