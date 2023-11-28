@@ -20,6 +20,12 @@ public class MealGen extends HttpServlet {
 	List<String> methodList = new ArrayList<>();
 	String[] flavorCategories = new String[2];
 	
+	private MealGenStrategy mealGenStrategy;
+	
+	public void setMealGenStrategy(MealGenStrategy mealGenStrategy) {
+		this.mealGenStrategy = mealGenStrategy;
+	}
+	
 	
 	
 	/*
@@ -70,6 +76,15 @@ public class MealGen extends HttpServlet {
 		// load database connection from the DatabaseUtil class
 		try (Connection connection = DatabaseUtil.getConnection()){
 			
+			// PART 3:
+			// set strategy:
+			if (mealGenStrategy == null) {
+				mealGenStrategy = new RandomMealGenConcreteStrategy();
+				// print statement to console showing strategy pattern being used:
+				System.out.println("Printing from the Strategy Pattern!");
+			}
+			
+			
 			/*
 			 * OLD CODE, IGNORE
 			try {
@@ -104,31 +119,37 @@ public class MealGen extends HttpServlet {
 			}
 			
 			
-			
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// PART 3: now using Strategy to gen meals:
+			List<String> foodList = mealGenStrategy.genFoods(connection);
+			List<String> methodList = mealGenStrategy.genMethods(connection);
 			
 			
 			
 			// get 2 foods for each flavorCategory
-			String foodQuery = ""
-					+ "SELECT idFoods, food, flavorCategory "
-					+ "FROM foods "
-					+ "WHERE flavorCategory = ? "
-					+ "ORDER BY RAND() "
-					+ "LIMIT 1";
+			// comment out for PART 3:
+			//String foodQuery = ""
+				//	+ "SELECT idFoods, food, flavorCategory "
+					//+ "FROM foods "
+					//+ "WHERE flavorCategory = ? "
+					//+ "ORDER BY RAND() "
+					//+ "LIMIT 1";
 			
 			// a for-each loop iterates thru the flavorCatergories array
-			for (String flavorCategory : flavorCategories) {
-				PreparedStatement preparedStatement = connection.prepareStatement(foodQuery);
+			// COMMENT OUT FOR PART 3:
+			//for (String flavorCategory : flavorCategories) {
+				//PreparedStatement preparedStatement = connection.prepareStatement(foodQuery);
 				// set value of '?' below:
-				preparedStatement.setString(1, flavorCategory);
-				ResultSet resultSet = preparedStatement.executeQuery();
+				//preparedStatement.setString(1, flavorCategory);
+				//ResultSet resultSet = preparedStatement.executeQuery();
 				
-				while (resultSet.next()) {
-					String food = resultSet.getString("food");
+				//while (resultSet.next()) {
+					//String food = resultSet.getString("food");
 					// add the food items to the List
-					foodList.add(food);
-				}
-			}
+					//foodList.add(food);
+				//}
+			//}
 			
 			
 			
@@ -184,17 +205,18 @@ public class MealGen extends HttpServlet {
 			
 			
 			// get random cooking methods
-			String methodSql = ""
-					+ "SELECT method "
-					+ "FROM cook_methods "
-					+ "ORDER BY RAND() LIMIT 2";
-			PreparedStatement methodStatement = connection.prepareStatement(methodSql);
-			ResultSet methodResultSet = methodStatement.executeQuery();
+			// COMMENT OUT FOR PART 3:
+			//String methodSql = ""
+				//	+ "SELECT method "
+					//+ "FROM cook_methods "
+					//+ "ORDER BY RAND() LIMIT 2";
+			//PreparedStatement methodStatement = connection.prepareStatement(methodSql);
+			//ResultSet methodResultSet = methodStatement.executeQuery();
 		
-			while (methodResultSet.next()) {
-				String method = methodResultSet.getString("method");
-				methodList.add(method);
-			}
+			//while (methodResultSet.next()) {
+				//String method = methodResultSet.getString("method");
+				//methodList.add(method);
+			//}
 			
 			if (!methodList.isEmpty()) {
 				out.println("<li>Prepare by: " + 
